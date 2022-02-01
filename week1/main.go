@@ -55,23 +55,33 @@ func main() {
 	// )
 
 	//running Higher Order function
-	p := PartialSum(10)
-	ps := p(10)
-	fmt.Println(ps)
+	// p := PartialSum(10)
+	// ps := p(10)
+	// fmt.Println(ps)
 
-	//
+	//variadic function (a function that accepts variable numbers of arguments)
+	sum(1, 2, 3, 4, 4, 5)
 
 }
 
 //can use func as a type
-type fn func(int) int
+// type fn func(int) int
 
 //Higher Order Function (type of which return/recives a function)
-func sum(x, y int) int {
-	return x + y
-}
-func PartialSum(x int) fn {
-	return func(i int) int {
-		return sum(x, i)
+// func sum(x, y int) int {
+// 	return x + y
+// }
+// func PartialSum(x int) fn {
+// 	return func(i int) int {
+// 		return sum(x, i)
+// 	}
+// }
+
+//variadic function
+func sum(x ...int) {
+	var res int
+	for i := range x {
+		res += x[i]
 	}
+	fmt.Println(res)
 }
