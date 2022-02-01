@@ -1,7 +1,5 @@
 package main
 
-import "fmt"
-
 func main() {
 
 	// var (
@@ -60,7 +58,25 @@ func main() {
 	// fmt.Println(ps)
 
 	//variadic function (a function that accepts variable numbers of arguments)
-	sum(1, 2, 3, 4, 4, 5)
+	// sum(1, 2, 3, 4, 4, 5)
+
+	//panic and recover
+	// var action int
+	// fmt.Println("Enter 1 for Student and 2 for Professional")
+	// fmt.Scanln(&action)
+	// /*  Use of Switch Case in Golang */
+	// switch action {
+	// case 1:
+	// 	fmt.Printf("I am a  Student")
+	// case 2:
+	// 	fmt.Printf("I am a  Professional")
+	// default:
+	// 	panic(fmt.Sprintf("I am a  %d", action))
+	// }
+	// // defer func() {
+	// // 	action := recover()
+	// // 	fmt.Println(action)
+	// // }()
 
 }
 
@@ -78,10 +94,10 @@ func main() {
 // }
 
 //variadic function
-func sum(x ...int) {
-	var res int
-	for i := range x {
-		res += x[i]
-	}
-	fmt.Println(res)
-}
+// func sum(x ...int) {
+// 	var res int
+// 	for i := range x {
+// 		res += x[i]
+// 	}
+// 	fmt.Println(res)
+// }
