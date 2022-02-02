@@ -1,5 +1,7 @@
 package main
 
+import "fmt"
+
 func main() {
 
 	// var (
@@ -73,11 +75,58 @@ func main() {
 	// default:
 	// 	panic(fmt.Sprintf("I am a  %d", action))
 	// }
-	// // defer func() {
-	// // 	action := recover()
-	// // 	fmt.Println(action)
-	// // }()
+	// defer func() {
+	// 	action := recover()
+	// 	fmt.Println(action)
+	// }()
 
+	//array with variadic operator
+	// var arr = [...]int{1, 2, 3, 4, 5}
+	// // fmt.Println("\n", len(arr))
+	// j := 0
+	// for range arr {
+	// 	if arr[j] == 1 {
+	// 		fmt.Print(true, "\n")
+	// 	} else {
+	// 		fmt.Println(false)
+	// 	}
+	// 	j++
+	// }
+
+	//interface
+	s := value{5, 5}
+	sf := valueF{10.2, 10.5}
+	fmt.Println(s.add())
+	fmt.Println(sf.addf())
+	e := Emp(0)
+	fmt.Println(e.PrintEm("rohan"))
+}
+
+//Interface
+type Sum interface {
+	add() int
+	addf() float64
+}
+type value struct {
+	a int
+	b int
+}
+type valueF struct {
+	a float64
+	b float64
+}
+type Emp int
+
+func (v value) add() int {
+	return v.a + v.b
+}
+
+func (v valueF) addf() float64 {
+	return v.a + v.b
+}
+
+func (c Emp) PrintEm(name string) string {
+	return name
 }
 
 //can use func as a type
