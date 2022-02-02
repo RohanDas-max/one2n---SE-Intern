@@ -94,12 +94,19 @@ func main() {
 	// }
 
 	//interface
-	s := value{5, 5}
-	sf := valueF{10.2, 10.5}
+	vi := value{1, 2}
+	vf := valueF{1.2, 1.2}
+	addvalue(vi)
+	addvalue(vf)
+
+}
+
+func addvalue(s Sum) {
+
+	fmt.Println(s)
 	fmt.Println(s.add())
-	fmt.Println(sf.addf())
-	e := Emp(0)
-	fmt.Println(e.PrintEm("rohan"))
+	fmt.Println(s.add())
+	fmt.Println(s.addf())
 }
 
 //Interface
@@ -115,19 +122,25 @@ type valueF struct {
 	a float64
 	b float64
 }
-type Emp int
 
 func (v value) add() int {
 	return v.a + v.b
+}
+func (v valueF) add() int {
+	return int(v.a + v.b)
 }
 
 func (v valueF) addf() float64 {
 	return v.a + v.b
 }
-
-func (c Emp) PrintEm(name string) string {
-	return name
+func (v value) addf() float64 {
+	return float64(v.a + v.b)
 }
+
+// type Emp int
+// func (e Emp) PrintEm(name string) string {
+// 	return name
+// }
 
 //can use func as a type
 // type fn func(int) int
