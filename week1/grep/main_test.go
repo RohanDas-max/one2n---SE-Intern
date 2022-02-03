@@ -6,51 +6,78 @@ import (
 )
 
 func TestSearchstdin(t *testing.T) {
-	arg := "foo"
-	input := []string{
-		"foo", "bar", "foobaz", "barbazfoo", "food",
-	}
-	g1 := "foo"
-	newi := []string{
-		"foo", "bar", "foobaz", "barbazfoo", "food",
-	}
 
-	ff := func(input []string, arg string) {
-		got := Searchstdin(input, arg)
-		var want error = nil
-		if got != want {
-			t.Errorf("got %v instead of %v", got, want)
-		}
+	var input = []struct {
+		arg   string
+		stdin []string
+	}{
+		{"foo", []string{"foo", "bar", "foobaz", "barbazfoo", "food"}},
+		{"bar", []string{"adas", "asdsad"}},
 	}
+	wg.Add(len(input))
 
-	ff(input, arg)
-	ff(newi, g1)
+	for _, ii := range input {
+		t.Run("", func(t *testing.T) {
+			got := Searchstdin(ii.stdin, ii.arg)
+			var want error = nil
+			if got != want {
+				t.Errorf("got %v instead of %v", got, want)
+			}
+		})
+	}
 }
 
 func TestSearch(t *testing.T) {
-	os.Create("test.txt")
-	os.WriteFile("test.txt", []byte("Hello World"), 0400)
-	filename := "dir"
-	args := "Hello"
+	var input = []struct {
+		filename string
+		arg      string
+	}{
+		{"dir", "Hello"},
+		// {"test.txt", "hello"}, //this will fail the test
+	}
+	for _, ii := range input {
+		t.Run("searching argument in a file/dir", func(t *testing.T) {
+			_, err := search(ii.filename, ii.arg)
 
-	defer os.Remove(filename)
-	got, err := search(filename, args)
-	if got == nil && err != nil {
-		t.Errorf("got %v instead of bool", got)
+			if err != nil {
+				t.Errorf("got:= %v ", err)
+			}
+		})
+	}
+}
+func TestOflag(t *testing.T) {
+	var input = []struct {
+		filename    string
+		data        string
+		destination string
+	}{
+		{"dir", "hello", "out.txt"},
+		// {"test.txt", "hello", "new.txt"},
+	}
+	wg.Add(len(input))
+	for _, ii := range input {
+		t.Run("testing oflag function", func(t *testing.T) {
+			got := oflag(ii.filename, ii.data, ii.destination)
+			var want error
+			if got != want {
+				t.Errorf("got=>%v", got)
+			}
+		})
+		os.Remove(ii.destination)
 	}
 }
 
-// func TestOflag(t *testing.T) {
-// 	filename := "out.txt"
-// 	data := "any thing"
+func Test_main(t *testing.T) {
+	tests := []struct {
+		name string
+	}{
+		{"anything"},
+		{"any"},
+	}
+	for _, tt := range tests {
+		t.Run(tt.name, func(m *testing.T) {
+			main()
+		})
+	}
 
-// 	ff := func(filename string, data string) {
-// 		got := oflag(filename, data)
-// 		var want error = nil
-// 		if got != nil {
-// 			t.Errorf("got %v instead %v", got, want)
-// 		}
-// 		os.Remove(filename)
-// 	}
-// 	ff(filename, data)
-// }
+}
