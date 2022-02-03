@@ -5,11 +5,9 @@ import (
 	"flag"
 	"fmt"
 	"io/fs"
-	"log"
 	"os"
 	"path/filepath"
 	"strings"
-	"time"
 )
 
 func main() {
@@ -22,22 +20,14 @@ func main() {
 	case len(os.Args) <= 3:
 		args := os.Args[1]
 		filename := os.Args[2]
-		found := search(filename, args)
-		if found {
-			fmt.Printf("%s found in %s \n ", args, filename)
-		}
+		data, _ := search(filename, args)
+		fmt.Println(data)
+
 	case len(os.Args) >= 4:
 		args := os.Args[1]
 		filename := os.Args[2]
-		found := search(filename, args)
-		if found {
-			output := fmt.Sprintf("%s found in %s \n ", args, filename)
-			OutputFilename := os.Args[4]
-			if OutputFilename != "" {
-				go oflag(OutputFilename, output)
-				time.Sleep(10 * time.Millisecond)
-			}
-		}
+		destfn := os.Args[4]
+		oflag(filename, args, destfn)
 	default:
 		fmt.Println("Ohh Noooo!")
 	}
@@ -65,32 +55,51 @@ func Searchstdin(input []string, arg string) error {
 }
 
 //function to search string from a file/folder
-func search(filename, args string) bool {
-	var res string
-	err := filepath.Walk(filename, func(path string, info fs.FileInfo, err error) error {
+func search(filename, args string) ([]string, error) {
+	var mapData = make(map[string]string)
+	if err := filepath.Walk(filename, func(path string, info fs.FileInfo, err error) error {
 		if err != nil {
 			return err
 		}
-		data, _ := os.ReadFile(path)
-		res = string(data)
-
+		dt, _ := os.ReadFile(path)
+		i := 0
+		for range dt {
+			mapData[path] += string(dt[i])
+			i++
+		}
 		return nil
-	})
-	if err != nil {
-		log.Fatal(err)
+	}); err != nil {
+		return nil, err
 	}
-	if strings.Contains(res, args) {
-		return true
+	var result []string
+	for fn, res := range mapData {
+		if strings.Contains(res, args) {
+			result = append(result, fmt.Sprintf("%s: %s found in this file\n", fn, args))
+		} else if !strings.Contains(res, args) {
+			result = append(result, fmt.Sprintf("%s: %s is not available in this file \n", fn, args))
+		}
+
 	}
-	return false
+	return result, nil
 }
 
 //function to invoke -o option to write in a file specified
-func oflag(filename string, data string) error {
-	s := flag.String("o", filename, "flag to store output in a file")
-	flag.Parse()
-	if err := os.WriteFile(*s, []byte(data), 0400); err != nil {
-		return err
+func oflag(filename string, arg string, dest string) error {
+
+	st, err := search(filename, arg)
+	var sr string
+	for _, dt := range st {
+		sr = dt
 	}
-	return nil
+	if err != nil {
+		return err
+	} else {
+		s := flag.String("o", dest, "flag to store output in a file")
+		flag.Parse()
+		if err := os.WriteFile(*s, []byte(sr), 0400); err != nil {
+			return err
+		}
+		return nil
+	}
+
 }
