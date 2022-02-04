@@ -1,7 +1,15 @@
 package main
 
-import "fmt"
+import (
+	"fmt"
+)
+
+func exec() {
+	n, k := flags()
+	res := Controller(n, k)
+	fmt.Printf("%d number player is the winner\n", res)
+}
 
 func main() {
-	fmt.Println("hello joseph")
+	exec()
 }
