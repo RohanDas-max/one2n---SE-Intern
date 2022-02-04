@@ -14,6 +14,12 @@ import (
 var wg sync.WaitGroup
 
 func main() {
+	core()
+}
+
+// var count = make(chan int)
+
+func core() {
 	switch {
 	case len(os.Args) <= 2:
 		wg.Add(1)
@@ -24,14 +30,18 @@ func main() {
 	case len(os.Args) <= 3:
 		args := os.Args[1]
 		filename := os.Args[2]
-		data, err := search(filename, args)
-		if err != nil {
-			fmt.Println("unable to read or file not available")
-		} else {
-			fmt.Println(data)
-		}
-	case len(os.Args) >= 4:
 		wg.Add(1)
+		go func() {
+			data, err := search(filename, args)
+			if err != nil {
+				fmt.Println("unable to read or file not available")
+			} else {
+				fmt.Println(data)
+			}
+		}()
+		wg.Wait()
+	case len(os.Args) >= 4:
+		wg.Add(2)
 		args := os.Args[1]
 		filename := os.Args[2]
 		destfn := os.Args[4]
@@ -39,9 +49,7 @@ func main() {
 		wg.Wait()
 	default:
 		break
-
 	}
-
 }
 
 //function to search string from standard input
@@ -49,12 +57,13 @@ func Searchstdin(input []string, arg string) error {
 	defer wg.Done()
 
 	scanner := bufio.NewScanner(os.Stdin)
+
 	for {
 		scanner.Scan()
 		text := scanner.Text()
 		if len(text) > 0 {
 			input = append(input, text)
-		} else {
+		} else if os.Interrupt.String() != "" {
 			break
 		}
 	}
@@ -71,7 +80,7 @@ func Searchstdin(input []string, arg string) error {
 
 //function to search string from a file/folder
 func search(filename, args string) ([]string, error) {
-
+	defer wg.Done()
 	var mapData = make(map[string]string)
 	err := filepath.Walk(filename, func(path string, info fs.FileInfo, err error) error {
 		if err != nil {

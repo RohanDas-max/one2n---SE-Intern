@@ -6,7 +6,6 @@ import (
 )
 
 func TestSearchstdin(t *testing.T) {
-
 	var input = []struct {
 		arg   string
 		stdin []string
@@ -15,7 +14,6 @@ func TestSearchstdin(t *testing.T) {
 		{"bar", []string{"adas", "asdsad"}},
 	}
 	wg.Add(len(input))
-
 	for _, ii := range input {
 		t.Run("", func(t *testing.T) {
 			got := Searchstdin(ii.stdin, ii.arg)
@@ -35,6 +33,7 @@ func TestSearch(t *testing.T) {
 		{"dir", "Hello"},
 		// {"test.txt", "hello"}, //this will fail the test
 	}
+	wg.Add(len(input))
 	for _, ii := range input {
 		t.Run("searching argument in a file/dir", func(t *testing.T) {
 			_, err := search(ii.filename, ii.arg)
@@ -54,7 +53,7 @@ func TestOflag(t *testing.T) {
 		{"dir", "hello", "out.txt"},
 		// {"test.txt", "hello", "new.txt"},
 	}
-	wg.Add(len(input))
+	wg.Add(len(input) + 1)
 	for _, ii := range input {
 		t.Run("testing oflag function", func(t *testing.T) {
 			got := oflag(ii.filename, ii.data, ii.destination)
@@ -80,4 +79,17 @@ func Test_main(t *testing.T) {
 		})
 	}
 
+}
+
+func Test_core(t *testing.T) {
+	tests := []struct {
+		name string
+	}{
+		// TODO: Add test cases.
+	}
+	for _, tt := range tests {
+		t.Run(tt.name, func(t *testing.T) {
+			core()
+		})
+	}
 }
