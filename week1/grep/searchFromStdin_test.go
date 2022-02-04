@@ -12,8 +12,12 @@ func TestSearchstdin(t *testing.T) {
 		args    args
 		wantErr bool
 	}{
-		// TODO: Add test cases.
+		{"random", args{
+			input: []string{},
+			arg:   "",
+		}, false},
 	}
+	wg.Add(len(tests))
 	for _, tt := range tests {
 		t.Run(tt.name, func(t *testing.T) {
 			if err := Searchstdin(tt.args.input, tt.args.arg); (err != nil) != tt.wantErr {

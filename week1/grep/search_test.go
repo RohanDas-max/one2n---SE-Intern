@@ -28,6 +28,7 @@ func Test_search(t *testing.T) {
 			wantErr: true,
 		},
 	}
+	wg.Add(len(tests))
 	for _, tt := range tests {
 		t.Run(tt.name, func(t *testing.T) {
 			_, err := search(tt.args.filename, tt.args.args)
