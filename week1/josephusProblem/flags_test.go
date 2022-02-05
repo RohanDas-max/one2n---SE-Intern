@@ -9,24 +9,21 @@ func Test_flags(t *testing.T) {
 		want1 int
 	}{
 		{
-			name:  "",
-			want:  0,
-			want1: 0,
+			name:  "1",
+			want:  14,
+			want1: 2,
 		},
 		// {
-		// 	name:  "",
+		// 	name:  "1",
 		// 	want:  14,
-		// 	want1: 3,
+		// 	want1: 2,
 		// },
 	}
 	for _, tt := range tests {
 		t.Run(tt.name, func(t *testing.T) {
 			got, got1 := flags()
-			if got != tt.want {
-				t.Errorf("flags() got = %v, want %v", got, tt.want)
-			}
-			if got1 != tt.want1 {
-				t.Errorf("flags() got1 = %v, want %v", got1, tt.want1)
+			if got == tt.want && got1 == tt.want1 {
+				t.Errorf("flags() got = %v, %v, want %v,%v", got, got1, tt.want, tt.want1)
 			}
 		})
 	}
