@@ -1,24 +1,13 @@
 package main
 
-import "testing"
+import (
+	"testing"
+)
 
 func TestSearchstdin(t *testing.T) {
-	type args struct {
-		input []string
-		arg   string
-	}
-	tests := []struct {
-		name    string
-		args    args
-		wantErr bool
-	}{
-		// TODO: Add test cases.
-	}
-	for _, tt := range tests {
-		t.Run(tt.name, func(t *testing.T) {
-			if err := Searchstdin(tt.args.input, tt.args.arg); (err != nil) != tt.wantErr {
-				t.Errorf("Searchstdin() error = %v, wantErr %v", err, tt.wantErr)
-			}
-		})
+	wg.Add(1)
+	err := Searchstdin("hello")
+	if err != nil {
+		t.Errorf("Searchstdin() error = %v", err)
 	}
 }

@@ -2,15 +2,16 @@ package main
 
 import (
 	"bufio"
+	"errors"
 	"fmt"
 	"os"
 	"strings"
 )
 
 //function to search string from standard input
-func Searchstdin(input []string, arg string) error {
+func Searchstdin(arg string) error {
 	defer wg.Done()
-
+	var input []string
 	scanner := bufio.NewScanner(os.Stdin)
 	for {
 		scanner.Scan()
@@ -26,7 +27,7 @@ func Searchstdin(input []string, arg string) error {
 		if present {
 			fmt.Println(input[i])
 		} else {
-			break
+			return errors.New("ooops!! not found")
 		}
 	}
 	return nil

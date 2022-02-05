@@ -15,19 +15,20 @@ func Test_search(t *testing.T) {
 		wantErr bool
 	}{
 		{
-			name:    "",
+			name:    "1",
 			args:    args{"dir", "hello"},
 			wantErr: false,
 		}, {
-			name:    "",
+			name:    "2",
 			args:    args{"test.txt", "hello"},
-			wantErr: false,
+			wantErr: true,
 		}, {
-			name:    "",
+			name:    "3",
 			args:    args{"random", "hello"},
 			wantErr: true,
 		},
 	}
+	wg.Add(len(tests))
 	for _, tt := range tests {
 		t.Run(tt.name, func(t *testing.T) {
 			_, err := search(tt.args.filename, tt.args.args)
@@ -35,7 +36,6 @@ func Test_search(t *testing.T) {
 				t.Errorf("search() error = %v, wantErr %v", err, tt.wantErr)
 				return
 			}
-
 		})
 	}
 }

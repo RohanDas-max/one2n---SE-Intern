@@ -10,6 +10,7 @@ import (
 
 //function to search string from a file/folder
 func search(filename, args string) ([]string, error) {
+	defer wg.Done()
 	var result []string
 	var mapData = make(map[string]string)
 	if err := filepath.Walk(filename, func(path string, info fs.FileInfo, err error) error {
