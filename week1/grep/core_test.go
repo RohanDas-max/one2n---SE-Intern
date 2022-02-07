@@ -4,17 +4,13 @@ import "testing"
 
 func Test_core(t *testing.T) {
 	tests := []struct {
-		name string
-	}{
-		{
-			name: "",
-		},
-	}
-	wg.Add(1)
+		name    string
+		wantErr bool
+	}{}
 	for _, tt := range tests {
 		t.Run(tt.name, func(t *testing.T) {
-			if err := core(); err != nil {
-				t.Errorf("got an error %v", err)
+			if err := core(); (err != nil) != tt.wantErr {
+				t.Errorf("core() error = %v, wantErr %v", err, tt.wantErr)
 			}
 		})
 	}

@@ -10,7 +10,6 @@ import (
 
 //function to search string from standard input
 func Searchstdin(arg string) error {
-	defer wg.Done()
 	var input []string
 	scanner := bufio.NewScanner(os.Stdin)
 	for {
@@ -22,13 +21,26 @@ func Searchstdin(arg string) error {
 			break
 		}
 	}
+	err := Checking(input, arg)
+	if err != nil {
+		return err
+	}
+	return nil
+}
+
+func Checking(input []string, arg string) error {
+	var present bool
+	var res []string
 	for i := range input {
-		present := strings.Contains(input[i], arg)
+		present = strings.Contains(input[i], arg)
 		if present {
-			fmt.Println(input[i])
-		} else {
-			return errors.New("ooops!! not found")
+			res = append(res, input[i])
 		}
+	}
+	if res != nil {
+		fmt.Println(res)
+	} else {
+		return errors.New("oops! not found")
 	}
 	return nil
 }

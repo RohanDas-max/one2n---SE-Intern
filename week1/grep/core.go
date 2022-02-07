@@ -2,6 +2,7 @@ package main
 
 import (
 	"fmt"
+	"log"
 	"os"
 	"sync"
 )
@@ -11,14 +12,24 @@ var wg sync.WaitGroup
 func core() error {
 	switch {
 	case len(os.Args) <= 2:
-		wg.Add(1)
 		arg := os.Args[1]
-		go Searchstdin(arg)
-		wg.Wait()
+		err := Searchstdin(arg)
+		if err != nil {
+			return err
+		}
 	case len(os.Args) <= 3:
 		args := os.Args[1]
 		filename := os.Args[2]
-		data, err := search(filename, args)
+		wg.Add(1)
+		dataChan := make(chan []string)
+		errChan := make(chan error)
+		go func() {
+			data, err := search(filename, args)
+			dataChan <- data
+			errChan <- err
+		}()
+		data := <-dataChan
+		err := <-errChan
 		if err != nil {
 			fmt.Println("unable to read or file not available")
 		} else {
@@ -28,17 +39,10 @@ func core() error {
 		args := os.Args[1]
 		filename := os.Args[2]
 		destfn := os.Args[4]
-
 		wg.Add(2)
-		errChan := make(chan error)
-		go func() {
-			err := oflag(filename, args, destfn)
-			errChan <- err
-		}()
-		err := <-errChan
-		close(errChan)
+		err := oflag(filename, args, destfn)
 		if err != nil {
-			return err
+			log.Fatal(err)
 		}
 		wg.Wait()
 	default:
